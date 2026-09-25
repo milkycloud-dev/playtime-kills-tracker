@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+}
+
+group = 'io.github.milkycloud-dev'
+version = '1.0'
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+}
+
+configurations {
+    // bundled into the plugin jar: the server has no MariaDB driver of its own
+    shade
+    implementation.extendsFrom shade
+}
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT'
+    shade('org.mariadb.jdbc:mariadb-java-client:3.4.1') { transitive = false }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+
+tasks.named('jar', Jar) {
+    archiveFileName = "${rootProject.name}-${project.version}.jar"
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from({ configurations.shade.collect { zipTree(it) } }) {
+        exclude 'META-INF/MANIFEST.MF', 'META-INF/*.SF', 'META-INF/*.RSA', 'META-INF/*.DSA', 'META-INF/maven/**'
+    }
+}

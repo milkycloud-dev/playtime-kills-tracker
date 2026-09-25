@@ -1,0 +1,16 @@
+name: NoteBunsStats
+main: com.notebuns.stats.StatsPlugin
+version: 1.0
+api-version: '1.13'
+author: milkycloud-dev
+website: https://github.com/milkycloud-dev/playtime-kills-tracker
+description: Tracks playtime and hostile mob kills, modded mobs included, in MySQL or MariaDB.
+commands:
+  playtime:
+    description: Своя статистика и топ сервера
+    usage: /playtime [top|flush]
+    aliases: [pt, время, стата]
+permissions:
+  notebunsstats.admin:
+    description: Ручной сброс статистики в базу
+    default: op
